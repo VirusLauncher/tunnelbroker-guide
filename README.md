@@ -1,4 +1,4 @@
-## Setting up Tunnelbroker IPv6 Tunnel (48 block)
+# Setting up Tunnelbroker IPv6 Tunnel (48 block)
 
 This guide will assist you in setting up an IPv6 tunnel using Tunnelbroker.net. The steps provided are tested on Ubuntu and Debian systems.
 Highly suggested to do manual method to understand what each command does.
