@@ -1,6 +1,15 @@
 ## Setting up Tunnelbroker IPv6 Tunnel (48 block)
 
 This guide will assist you in setting up an IPv6 tunnel using Tunnelbroker.net. The steps provided are tested on Ubuntu and Debian systems.
+Highly suggested to do manual method to understand what each command does.
+
+## Automatic Method
+
+```bash
+curl -sSL https://raw.githubusercontent.com/VirusLauncher/tunnelbroker-guide/main/setup_tunnel.sh | bash
+```
+
+## Manual Method
 
 ### Note: Enabling IPv6 Non-Local Bind
 
