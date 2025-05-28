@@ -14,12 +14,11 @@ read -p "Enter your IPv6 block [YOUR_IPV6_BLOCK]: " YOUR_IPV6_BLOCK
 # Update package list and install required packages
 echo "Updating package list and installing required packages..."
 apt-get update -y
-apt-get install -y \
-  iproute2 \
-  iputils-ping \
-  curl \
-  dnsutils \
-  net-tools
+apt-get install -y iputils-ping 
+
+# Enabling IPv6 Non-Local Bind
+sysctl -w net.ipv6.ip_nonlocal_bind=1
+echo 'net.ipv6.ip_nonlocal_bind = 1' >> /etc/sysctl.conf
 
 # Set up the IPv6 tunnel using the tunnel broker service
 echo "Setting up IPv6 tunnel..."
@@ -40,7 +39,7 @@ sudo ip route add ::/0 via $YOUR_IPV6_BLOCK::1 dev he-ipv6
 sudo ip -6 route replace local $YOUR_IPV6_BLOCK::/48 dev lo
 
 
-# 4. Verify that the tunnel is working by pinging an IPv6 address
+# Verify that the tunnel is working by pinging an IPv6 address
 echo "Verifying tunnel setup..."
 ping6 -c 4 ipv6.google.com
 
