@@ -9,7 +9,7 @@ Highly suggested to do manual method to understand what each command does.
 ## Automatic Method
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/VirusLauncher/tunnelbroker-guide/main/setup_tunnel.sh | bash
+curl -sSL https://raw.githubusercontent.com/your-username/ipv6-tunnel-script/main/setup_tunnel.sh -o setup_tunnel.sh
 ```
 
 ## Manual Method
