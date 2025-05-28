@@ -8,8 +8,10 @@ Highly suggested to do manual method to understand what each command does.
 
 ## Automatic Method
 
+Ensure you in root mode before executing the commands.
 ```bash
-curl -sSL https://raw.githubusercontent.com/VirusLauncher/tunnelbroker-guide/main/setup_tunnel.sh -o setup_tunnel.sh
+apt install -y curl 
+curl -sSL https://raw.githubusercontent.com/VirusLauncher/tunnelbroker-guide/refs/heads/main/setup_tunnel.sh -o setup_tunnel.sh && sudo bash setup_tunnel.sh
 ```
 
 ## Manual Method
