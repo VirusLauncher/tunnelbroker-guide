@@ -30,14 +30,13 @@ ip tunnel add he-ipv6 mode sit remote $TUNNEL_SERVER_IPV4 local $YOUR_CLIENT_IPV
 ip link set he-ipv6 up
 
 # Command 3: Add IPv6 Address to the Tunnel Interface
-sudo ip addr add $YOUR_IPV6_BLOCK::2/48 dev he-ipv6
+ip addr add $YOUR_IPV6_BLOCK::2/48 dev he-ipv6
 
 # Command 4: Add IPv6 Default Route
-sudo ip route add ::/0 via $YOUR_IPV6_BLOCK::1 dev he-ipv6
+ip route add ::/0 via $YOUR_IPV6_BLOCK::1 dev he-ipv6
 
 # Command 5: Handle Limited Pingability
-sudo ip -6 route replace local $YOUR_IPV6_BLOCK::/48 dev lo
-
+ip -6 route replace local $YOUR_IPV6_BLOCK::/48 dev lo
 
 # Verify that the tunnel is working by pinging an IPv6 address
 echo "Verifying tunnel setup..."
@@ -52,9 +51,14 @@ else
 fi
 
 # Make the tunnel persistent on boot by creating a systemd service
-
 echo "Creating systemd service for persistent tunnel configuration..."
 
+# Pass the values of the variables to a temporary environment file
+echo "YOUR_CLIENT_IPV4=$YOUR_CLIENT_IPV4" > /etc/default/ipv6-tunnel
+echo "TUNNEL_SERVER_IPV4=$TUNNEL_SERVER_IPV4" >> /etc/default/ipv6-tunnel
+echo "YOUR_IPV6_BLOCK=$YOUR_IPV6_BLOCK" >> /etc/default/ipv6-tunnel
+
+# Create systemd service to call the helper script on boot
 cat > /etc/systemd/system/ipv6-tunnel.service <<EOL
 [Unit]
 Description=IPv6 Tunnel Setup for Tunnelbroker
@@ -62,7 +66,8 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/bin/bash -c '/sbin/ip tunnel add he-ipv6 mode sit remote $TUNNEL_SERVER_IPV4 local $YOUR_CLIENT_IPV4 ttl 255 && /sbin/ip link set he-ipv6 up && /sbin/ip addr add $YOUR_IPV6_BLOCK::2/48 dev he-ipv6 && /sbin/ip route add ::/0 via $YOUR_IPV6_BLOCK::1 dev he-ipv6 && /sbin/ip -6 route replace local $YOUR_IPV6_BLOCK::/48 dev lo'
+EnvironmentFile=/etc/default/ipv6-tunnel
+ExecStart=/bin/bash -c '/sbin/ip tunnel add he-ipv6 mode sit remote \$TUNNEL_SERVER_IPV4 local \$YOUR_CLIENT_IPV4 ttl 255 && /sbin/ip link set he-ipv6 up && /sbin/ip addr add \$YOUR_IPV6_BLOCK::2/48 dev he-ipv6 && /sbin/ip route add ::/0 via \$YOUR_IPV6_BLOCK::1 dev he-ipv6 && /sbin/ip -6 route replace local \$YOUR_IPV6_BLOCK::/48 dev lo'
 RemainAfterExit=true
 ExecStop=/bin/bash -c '/sbin/ip link set he-ipv6 down && /sbin/ip tunnel del he-ipv6'
 
@@ -71,6 +76,7 @@ WantedBy=multi-user.target
 EOL
 
 # Reload systemd, enable the service, and start it
+systemctl daemon-reload
 systemctl enable ipv6-tunnel.service
 systemctl start ipv6-tunnel.service
 
