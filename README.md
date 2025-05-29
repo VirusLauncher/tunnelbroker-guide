@@ -140,6 +140,12 @@ sudo systemctl enable ipv6-tunnel.service
 sudo systemctl start ipv6-tunnel.service
 ```
 
+### Additional Notes
+#### When using docker
+If you use Docker, you will need to set your network mode to "host". This will let your container use the network as if it was not in a container.
+#### Pterodactyl 
+Refer to: https://pterodactyl.io/wings/1.0/configuration.html#custom-network-interfaces
+
 ### Final Notes
 
 Tunnelbroker will introduce lag into your system, whether you like it or not. This lag is interpreted based on the location you set. More mainstream locations will likely have more lag due to higher traffic. keep in mind that Tunnelbroker is not exclusive to Discord music bot development; other projects utilize it as well. While it's a widely used tool, it isn't always perfect for VOIP.
