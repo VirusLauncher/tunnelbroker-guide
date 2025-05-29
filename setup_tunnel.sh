@@ -67,9 +67,9 @@ After=network.target
 [Service]
 Type=oneshot
 EnvironmentFile=/etc/default/ipv6-tunnel
-ExecStart=/bin/bash -c '/sbin/ip tunnel add he-ipv6 mode sit remote \$TUNNEL_SERVER_IPV4 local \$YOUR_CLIENT_IPV4 ttl 255 && /sbin/ip link set he-ipv6 up && /sbin/ip addr add \$YOUR_IPV6_BLOCK::2/48 dev he-ipv6 && /sbin/ip route add ::/0 via \$YOUR_IPV6_BLOCK::1 dev he-ipv6 && /sbin/ip -6 route replace local \$YOUR_IPV6_BLOCK::/48 dev lo'
+ExecStart=/bin/bash -c 'ip tunnel add he-ipv6 mode sit remote \$TUNNEL_SERVER_IPV4 local \$YOUR_CLIENT_IPV4 ttl 255 && ip link set he-ipv6 up && ip addr add \$YOUR_IPV6_BLOCK::2/48 dev he-ipv6 && ip route add ::/0 via \$YOUR_IPV6_BLOCK::1 dev he-ipv6 && ip -6 route replace local \$YOUR_IPV6_BLOCK::/48 dev lo'
 RemainAfterExit=true
-ExecStop=/bin/bash -c '/sbin/ip link set he-ipv6 down && /sbin/ip tunnel del he-ipv6'
+ExecStop=/bin/bash -c 'ip link set he-ipv6 down && ip tunnel del he-ipv6'
 
 [Install]
 WantedBy=multi-user.target
