@@ -50,34 +50,4 @@ else
   exit 1
 fi
 
-# Make the tunnel persistent on boot by creating a systemd service
-echo "Creating systemd service for persistent tunnel configuration..."
-
-# Pass the values of the variables to a temporary environment file
-echo "YOUR_CLIENT_IPV4=$YOUR_CLIENT_IPV4" > /etc/default/ipv6-tunnel
-echo "TUNNEL_SERVER_IPV4=$TUNNEL_SERVER_IPV4" >> /etc/default/ipv6-tunnel
-echo "YOUR_IPV6_BLOCK=$YOUR_IPV6_BLOCK" >> /etc/default/ipv6-tunnel
-
-# Create systemd service dynamically with expanded variables
-cat > /etc/systemd/system/ipv6-tunnel.service <<EOL
-[Unit]
-Description=IPv6 Tunnel Setup for Tunnelbroker
-After=network.target
-
-[Service]
-Type=oneshot
-EnvironmentFile=/etc/default/ipv6-tunnel
-ExecStart=/bin/bash -c "ip tunnel add he-ipv6 mode sit remote $TUNNEL_SERVER_IPV4 local $YOUR_CLIENT_IPV4 ttl 255 && ip link set he-ipv6 up && ip addr add $YOUR_IPV6_BLOCK::2/48 dev he-ipv6 && ip route add ::/0 via $YOUR_IPV6_BLOCK::1 dev he-ipv6 && ip -6 route replace local $YOUR_IPV6_BLOCK::/48 dev lo"
-RemainAfterExit=true
-ExecStop=/bin/bash -c "ip link set he-ipv6 down && ip tunnel del he-ipv6"
-
-[Install]
-WantedBy=multi-user.target
-EOL
-
-# Reload systemd, enable the service, and start it
-systemctl daemon-reload
-systemctl enable ipv6-tunnel.service
-systemctl start ipv6-tunnel.service
-
-echo "Tunnel should now persist across reboots. To stop the tunnel, use: systemctl stop ipv6-tunnel.service"
+echo "To make the tunnel persistent across reboots, read the documentation to Persist for next boot"
